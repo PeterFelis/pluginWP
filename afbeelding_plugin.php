@@ -14,14 +14,16 @@ if (!defined('ABSPATH')) {
 function toon_afbeeldingen()
 {
     global $wpdb;
-    $tabel_naam = $wpdb->prefix . 'ImageDetails';  // Pas aan indien nodig.
+    $tabel_naam = 'ImageDetails';  // Pas aan indien nodig.
     $query = "SELECT id, image_url, image_text FROM $tabel_naam";
     $results = $wpdb->get_results($query);
     $output = '';
+    $teller = 0;
 
     if ($results) {
         $output .= "<div class='image-grid'>";
         foreach ($results as $row) {
+            $teller++;
             $image_url = $row->image_url;
             $small_image_url = str_replace('original', 'image-small', $image_url);
             $medium_image_url = str_replace('original', 'image-medium', $image_url);
@@ -35,7 +37,9 @@ function toon_afbeeldingen()
             $output .= "<p>" . esc_html($row->image_text) . "</p>";
             $output .= "</div>";
         }
+
         $output .= "</div>";
+        $output .= "<p> Totaal " . $teller . "</p>";
     } else {
         $output .= "0 results";
     }
