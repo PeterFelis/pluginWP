@@ -52,29 +52,65 @@ add_shortcode('toon_afbeeldingen', 'toon_afbeeldingen');
 
 
 
-// met dynamische data, dit is gemaakt door chat
-function haal_afbeeldingen_op($args = array())
+
+
+function haal_eerste_afbeelding_op()
 {
     global $wpdb;
-    $tabel_naam = $wpdb->prefix . 'ImageDetails';
+    $tabel_naam = 'ImageDetails';
 
-    // Standaard argumenten
-    $standaard_args = array(
-        'aantal' => 10,
-        // ... andere standaard argumenten
-    );
+    // SQL query opbouwen om slechts één resultaat op te halen
+    $query = "SELECT * FROM $tabel_naam LIMIT 1";
 
-    // Samenvoegen van argumenten
-    $args = wp_parse_args($args, $standaard_args);
+    // Resultaat ophalen
+    $result = $wpdb->get_row($query);
 
-    // SQL query opbouwen
-    $query = $wpdb->prepare(
-        "SELECT * FROM $tabel_naam LIMIT %d",
-        $args['aantal']
-    );
+    // Controleer of er een resultaat is en retourneer de afbeeldings-URL
+    if ($result) {
+        return $result->image_url;
+    }
 
-    // Resultaten ophalen
+    // Retourneer een lege string als er geen resultaat is
+    return '';
+}
+
+
+function test_haal_afbeeldingen_op_shortcode()
+{
+    ob_start();  // Start output buffering
+
+    // Roep je functie aan
+    $result = haal_eerste_afbeelding_op();
+
+    // Dump het resultaat
+    var_dump($result);
+
+    return ob_get_clean();  // Returneer en wis de output buffer
+}
+add_shortcode('test_haal_afbeeldingen_op', 'test_haal_afbeeldingen_op_shortcode');
+
+
+
+/// rest api
+
+add_action('rest_api_init', function () {
+    register_rest_route('mijn-plugin/v1', '/afbeeldingen', array(
+        'methods' => 'GET',
+        'callback' => 'haal_afbeeldingen_op',
+    ));
+});
+
+
+
+function haal_afbeeldingen_op($request)
+{
+    global $wpdb;
+    $tabel_naam = 'ImageDetails';
+    $query = "SELECT * FROM $tabel_naam";
     $results = $wpdb->get_results($query);
-
-    return $results;
+    $afbeeldingen = array();
+    foreach ($results as $result) {
+        $afbeeldingen[] = $result->image_url;
+    }
+    return new WP_REST_Response($afbeeldingen, 200);
 }
