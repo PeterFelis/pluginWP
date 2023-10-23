@@ -48,3 +48,33 @@ function toon_afbeeldingen()
 }
 
 add_shortcode('toon_afbeeldingen', 'toon_afbeeldingen');
+
+
+
+
+// met dynamische data, dit is gemaakt door chat
+function haal_afbeeldingen_op($args = array())
+{
+    global $wpdb;
+    $tabel_naam = $wpdb->prefix . 'ImageDetails';
+
+    // Standaard argumenten
+    $standaard_args = array(
+        'aantal' => 10,
+        // ... andere standaard argumenten
+    );
+
+    // Samenvoegen van argumenten
+    $args = wp_parse_args($args, $standaard_args);
+
+    // SQL query opbouwen
+    $query = $wpdb->prepare(
+        "SELECT * FROM $tabel_naam LIMIT %d",
+        $args['aantal']
+    );
+
+    // Resultaten ophalen
+    $results = $wpdb->get_results($query);
+
+    return $results;
+}
