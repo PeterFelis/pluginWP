@@ -1,0 +1,22 @@
+www.felis.nl
+peter
+
+
+db:  sql214.hostingdiscounter.nl
+log in: peter
+pass: ErjED8nWfP
+Db: company
+
+21-10-2023 aanpassen naar oxygen als vinger oefening met chattybaby
+
+dbbase sql (dank je chat)
+ 
+ CREATE TABLE ImageDetails (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    image_url VARCHAR(255) NOT NULL,
+    image_text TEXT,
+    image_tags TEXT
+);
+
+dir voor de plaatjes:
+/plaatjes

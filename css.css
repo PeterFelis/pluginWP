@@ -1,0 +1,93 @@
+.image-grid {
+  -moz-columns: 1 auto;
+       columns: 1 auto;
+}
+
+@media (min-width: 768px) {
+  .image-grid {
+    -moz-columns: 3 auto;
+         columns: 3 auto;
+    -moz-column-gap: 1rem;
+         column-gap: 1rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+.image-grid div {
+  position: relative;
+  transition: transform 2s ease-in-out;
+  overflow: hidden;
+}
+.image-grid img {
+  width: 100%;
+  height: auto;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+.image-grid p {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  transition: opacity 0.5s;
+  font-size: 1rem;
+  padding: 1rem;
+}
+.image-grid div:hover p {
+  visibility: hidden;
+}
+.image-grid div:hover {
+  transform: scale(1.02);
+  z-index: 200;
+  overflow: hidden;
+}
+
+.menu {
+  position: fixed;
+  top: 0;
+  left: -100%;
+  width: 250px;
+  height: 100vh;
+  background-color: #f2f2f2;
+  transition: left 0.3s ease;
+  z-index: 1000;
+  overflow-y: auto;
+}
+
+.menu-icon {
+  background: none;
+  border: none;
+  color: #333;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 0;
+}
+
+.menu-items {
+  display: none;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.menu-items li {
+  margin-bottom: 10px;
+}
+
+.menu-items li a {
+  display: block;
+  padding: 10px;
+  text-decoration: none;
+  color: #333;
+  transition: background-color 0.3s ease;
+}
+
+.menu-items li a:hover {
+  background-color: #ddd;
+}
+
+.menu-items.show {
+  left: 0;
+}/*# sourceMappingURL=css.css.map */
