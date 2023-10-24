@@ -35,6 +35,45 @@ if (!file_put_contents($original_filename, $imageData)) {
   exit("Sorry, there was an error uploading your file.");
 }
 
+
+// 24-10-2023
+// tussengevoegd door chat om afbeelding in medialibrary van wp te zetten
+
+// Nieuwe code begint hier
+include_once(ABSPATH . 'wp-admin/includes/media.php');
+include_once(ABSPATH . 'wp-admin/includes/file.php');
+include_once(ABSPATH . 'wp-admin/includes/image.php');
+
+$bestandspad = $original_filename;  // Zorg ervoor dat dit het volledige pad naar het bestand is
+$file_array = array(
+  'name'     => basename($bestandspad),
+  'tmp_name' => $bestandspad,
+);
+
+// Upload het bestand naar de Media Library
+$attachment_id = media_handle_sideload($file_array, 0);
+
+if (is_wp_error($attachment_id)) {
+  // Foutafhandeling
+  echo $attachment_id->get_error_message();
+} else {
+  // Maak een nieuw bericht van het aangepaste berichttype
+  $post_id = wp_insert_post(array(
+    'post_type'   => 'afbeelding',
+    'post_title'  => preg_replace('/\.[^.]+$/', '', basename($bestandspad)),
+    'post_status' => 'publish',
+  ));
+
+  // Stel de geüploade afbeelding in als de uitgelichte afbeelding voor het bericht
+  set_post_thumbnail($post_id, $attachment_id);
+}
+
+// ... Rest van je code ...
+
+
+
+
+
 include_once('db.php');
 
 $image_url = "https://felis.nl/" . $original_filename; // Replace with your server's actual URL
@@ -81,35 +120,7 @@ foreach ($target_files as $index => $target_file) {
   $resized_image = imagecreatetruecolor($new_width, $new_height);
   imagecopyresampled($resized_image, $image, 0, 0, 0, 0, $new_width, $new_height, $width, $height);
 
-  //hiermee kan het formaat op de afbeelding gezet worden voor test. code even bewaren
-  // Add text based on the image size
-  // $size_text = "";
-  // switch ($index) {
-  //   case 0: // Small size
-  //     $size_text = "Small";
-  //     break;
-  //   case 1: // Medium size
-  //     $size_text = "Medium";
-  //     break;
-  //   case 2: // Large size
-  //     $size_text = "Large";
-  //     break;
-  //   default:
-  //     break;
-  // }
 
-  // // Set text color
-  // $text_color = imagecolorallocate($resized_image, 255, 255, 255); // White color
-
-  // // Set font size
-  // $font_size = 4;
-
-  // // Set text position
-  // $text_x = 10;
-  // $text_y = 20;
-
-  // // Write text on the image
-  // imagestring($resized_image, $font_size, $text_x, $text_y, $size_text, $text_color);
 
   $resized_filename = $target_dir . $base_filename . '-' . $target_file;
   switch ($imageFileType) {

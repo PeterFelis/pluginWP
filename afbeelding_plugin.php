@@ -114,3 +114,19 @@ function haal_afbeeldingen_op($request)
     }
     return new WP_REST_Response($afbeeldingen, 200);
 }
+
+
+
+
+//nodig voor opslaan in wordpress database
+// 24-10 chat
+function registreer_afbeeldingen_cpt()
+{
+    $args = array(
+        'public' => true,
+        'label'  => 'Afbeeldingen',
+        'supports' => array('title', 'thumbnail'),
+    );
+    register_post_type('afbeelding', $args);
+}
+add_action('init', 'registreer_afbeeldingen_cpt');
